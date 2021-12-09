@@ -1,10 +1,9 @@
 package nasaservice
 
 import (
+	"fmt"
 	"net/url"
 	"os"
-
-	"go.uber.org/zap"
 )
 
 type NASA struct {
@@ -13,22 +12,20 @@ type NASA struct {
 	APIKey  string
 }
 
-var logger *zap.Logger
-
 func (ns *NASA) SetDomain() error {
 	domain, ok := os.LookupEnv("NASA_APIS")
 
 	if !ok {
-		logger.Error("NASA_APIS environment variable doesn`t exist")
+		fmt.Println("NASA_APIS environment variable doesn`t exist")
 	}
 
-	url, err := url.Parse(domain)
+	URL, err := url.Parse(domain)
 
 	if err != nil {
-		logger.Error("failed to parse url from NASA source")
+		fmt.Println("failed to parse url from NASA source")
 	}
 
-	ns.Domain = url
+	ns.Domain = URL
 
 	return nil
 }
@@ -36,11 +33,11 @@ func (ns *NASA) SetDomain() error {
 func (ns *NASA) SetService() error {
 	service, ok := os.LookupEnv("NASA_SERVICE")
 	if !ok {
-		logger.Error("NASA_SERVICE environment variable doesn`t exist")
+		fmt.Println("NASA_SERVICE environment variable doesn`t exist")
 	}
 
 	if len(service) == 0 {
-		logger.Error("NASA_SERVICE environment variable exists, but not set")
+		fmt.Println("NASA_SERVICE environment variable exists, but not set")
 	}
 
 	ns.Service = service
@@ -49,14 +46,14 @@ func (ns *NASA) SetService() error {
 }
 
 func (ns *NASA) SetAPIKey() error {
-	APIKey, ok := os.LookupEnv("SERVICE_APIKey")
+	APIKey, ok := os.LookupEnv("SERVICE_APIKEY")
 
 	if !ok {
-		logger.Error("SERVICE_APIKey environment variable doesn`t exist")
+		fmt.Println("SERVICE_APIKey environment variable doesn`t exist")
 	}
 
 	if len(APIKey) == 0 {
-		logger.Error("SERVICE_APIKey environment variable exists, but not set")
+		fmt.Println("SERVICE_APIKey environment variable exists, but not set")
 	}
 
 	ns.APIKey = APIKey

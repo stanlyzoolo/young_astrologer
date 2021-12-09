@@ -1,14 +1,13 @@
 package main
 
 import (
+	"astro/nasaservice"
+	"astro/storage"
 	"bufio"
 	"context"
 	"fmt"
 	"net/http"
-
 	"os"
-	"young_astrologer/nasaservice"
-	"young_astrologer/storage"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
@@ -72,6 +71,7 @@ func main() {
 			apod.URL,
 			apod.Image)
 	}
+	logger.Sugar().Info("Picture was successfully saved")
 
 	defer connNASA.Close(context.Background())
 }
@@ -157,14 +157,14 @@ func prepareURL(ns *nasaservice.NASA) string {
 
 func interactive() bool {
 	fmt.Println("If you like this picture, we can save it for you. Just type yes/no:")
-	
+
 	sc := bufio.NewScanner(os.Stdin)
-	
+
 	for sc.Scan() {
 		if sc.Text() == "yes" {
 			return true
 		} else {
-			fmt.Println("We hope the better picture will appear tomorrow")			
+			fmt.Println("We hope the better picture will appear tomorrow")
 			return false
 		}
 	}

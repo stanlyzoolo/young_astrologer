@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-
-	"go.uber.org/zap"
 )
 
 // A picture of a day presents json from NASA api source.
@@ -24,21 +22,19 @@ type APOD struct {
 	Image          []byte `db:"image"           json:"image"`
 }
 
-var logger *zap.Logger
-
 func (p *APOD) getImage() error {
 	imageURL := p.URL
 	resp, err := http.Get(imageURL)
 
 	if err != nil {
-		logger.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	defer resp.Body.Close()
 
 	p.Image, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logger.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	return nil
@@ -48,19 +44,19 @@ func (p *APOD) Metadata(resp *http.Response) error {
 	d, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		logger.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	err = json.Unmarshal(d, &p)
 
 	if err != nil {
-		logger.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	err = p.getImage()
 
 	if err != nil {
-		logger.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	return nil
